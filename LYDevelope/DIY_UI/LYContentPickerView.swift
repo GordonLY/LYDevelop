@@ -41,7 +41,7 @@ class LYContentPickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource 
         keyWindow?.addSubview(self)
         UIView.animate(withDuration: 0.3) {
             self.backgroundColor = UIColor.init(white: 0, alpha: 0.6)
-            self.containerView.top = self.height - kFitCeilWid(250)
+            self.containerView.top = self.height - kFitCeilWid(250) - kBtmSafeHei()
         }
     }
     func hide() {
