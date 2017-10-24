@@ -15,6 +15,10 @@ class LYHitTestTableView: LYTableView {
         guard let currentView = view else {
             return view
         }
+        /// fit iOS8
+        if LYKeyBoardStatus.shared.keyboardRect.contains(point) {
+            return view
+        }
         if currentView.isKind(of: UITextView.self) || currentView.isKind(of: UITextField.self) ||
             currentView.isKind(of: UIButton.self) {
             return currentView
@@ -22,5 +26,30 @@ class LYHitTestTableView: LYTableView {
             self.endEditing(true)
             return currentView
         }
+    }
+}
+
+class LYKeyBoardStatus: NSObject {
+    
+    var keyboardRect = CGRect.zero
+    
+    static let shared = LYKeyBoardStatus()
+    private override init() {
+        super.init()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyBoardDidShow(noti:)), name: .UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyBoardDidHide), name: .UIKeyboardDidHide, object: nil)
+    }
+    @objc private func keyBoardDidShow(noti: Notification) {
+        if let dict = noti.userInfo,
+            let keybRect = dict[UIKeyboardFrameEndUserInfoKey] as? CGRect {
+            keyboardRect = keybRect
+        }
+    }
+    @objc private func keyBoardDidHide() {
+        keyboardRect = .zero
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 }
