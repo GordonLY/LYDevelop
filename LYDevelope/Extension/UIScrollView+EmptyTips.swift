@@ -11,7 +11,7 @@ import UIKit
 extension UIScrollView {
     
     private static var empty = "\0"
-    var emptyView: LYNoDataView? {
+    fileprivate var emptyView: LYNoDataView? {
         return objc_getAssociatedObject(self, &UIScrollView.empty) as? LYNoDataView
     }
     
@@ -66,7 +66,7 @@ extension UICollectionView {
     }
 }
 
-class LYNoDataView: UIView {
+fileprivate class LYNoDataView: UIView {
     
     fileprivate var tips : NSAttributedString
     fileprivate var image: UIImage?
