@@ -18,10 +18,10 @@ extension LYDevelop where Base == String {
     /// - Parameter wordSpacing: 文字间距
     ///
     /// - Returns: 带有字体,颜色,间距的AttributedString
-    func attributeStr(font: UIFont, color: UIColor, wordSpacing: Float) -> NSMutableAttributedString {
+    func attributeStr(font: UIFont, color: UIColor, wordSpacing: Float = 0) -> NSMutableAttributedString {
         
         let attrStr = NSMutableAttributedString.init(string: base)
-        guard base.characters.count > 0 else {
+        guard base.count > 0 else {
             return attrStr
         }
         let range = NSMakeRange(0, attrStr.length)
