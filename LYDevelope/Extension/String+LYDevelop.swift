@@ -10,15 +10,27 @@ import UIKit
 
 extension LYDevelop where Base == String {
     
-    // MARK: === 字符串添加字间距
-    ///  字符串添加字间距（通过转化成AttributedString的方式）
+    // MARK: === 字符串添加字间距,行间距
+    ///  字符串添加字间距,行间距（通过转化成AttributedString的方式）
     ///
     /// - Parameter font: 文字字体
     /// - Parameter color: 文字颜色
     /// - Parameter wordSpacing: 文字间距
+    /// - Parameter lineSpacing: 行间距
+    /// - Parameter lineAlignment: 文字对齐方式
     ///
     /// - Returns: 带有字体,颜色,间距的AttributedString
-    func attributeStr(font: UIFont, color: UIColor, wordSpacing: Float = 0) -> NSMutableAttributedString {
+    func attributeStr(font: UIFont, color: UIColor, wordSpacing: Float = 0, lineSpacing: CGFloat = 0, lineAlignment: NSTextAlignment = .left) -> NSMutableAttributedString {
+        
+        let attr = self.attributeStr(font: font, color: color, wordSpacing: wordSpacing)
+        let paragrapnStyle = NSMutableParagraphStyle()
+        paragrapnStyle.lineSpacing = CGFloat(lineSpacing)
+        paragrapnStyle.alignment = lineAlignment
+        attr.addAttribute(.paragraphStyle, value: paragrapnStyle, range: NSMakeRange(0, attr.length))
+        return attr
+    }
+    
+    private func attributeStr(font: UIFont, color: UIColor, wordSpacing: Float) -> NSMutableAttributedString {
         
         let attrStr = NSMutableAttributedString.init(string: base)
         guard base.count > 0 else {
@@ -33,27 +45,7 @@ extension LYDevelop where Base == String {
         attrStr.addAttribute(.kern, value: wordSpacing, range: NSMakeRange(0, attrStr.length - 1))
         return attrStr
     }
-    
-    // MARK: === 字符串添加字间距,行间距
-    ///  字符串添加字间距,行间距（通过转化成AttributedString的方式）
-    ///
-    /// - Parameter font: 文字字体
-    /// - Parameter color: 文字颜色
-    /// - Parameter wordSpacing: 文字间距
-    /// - Parameter lineSpacing: 行间距
-    /// - Parameter lineAlignment: 文字对齐方式
-    ///
-    /// - Returns: 带有字体,颜色,间距的AttributedString
-    func attributeStr(font: UIFont, color: UIColor, wordSpacing: Float, lineSpacing:CGFloat, lineAlignment:NSTextAlignment) -> NSMutableAttributedString {
-        
-        let attr = self.attributeStr(font: font, color: color, wordSpacing: wordSpacing)
-        let paragrapnStyle = NSMutableParagraphStyle()
-        paragrapnStyle.lineSpacing = CGFloat(lineSpacing)
-        paragrapnStyle.alignment = lineAlignment
-        attr.addAttribute(.paragraphStyle, value: paragrapnStyle, range: NSMakeRange(0, attr.length))
-        return attr
-    }
-    
+
     
     
     // MARK: === 正则校验
@@ -84,7 +76,7 @@ extension LYDevelop where Base == String {
     }
 }
 
-private let regex_手机号 = "^[1][34578][0-9]{9}$"
+private let regex_手机号 = "^[1][0-9]{10}$"
 private let regex_身份证号 = "^(\\d{14}|\\d{17})(\\d|[xX])$"
 
 
