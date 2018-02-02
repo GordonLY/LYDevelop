@@ -1,0 +1,105 @@
+{
+  "random" : false,
+  "authPass" : null,
+  "useOnlinePac" : false,
+  "TTL" : 0,
+  "global" : false,
+  "reconnectTimes" : 3,
+  "index" : 0,
+  "proxyType" : 0,
+  "proxyHost" : null,
+  "authUser" : null,
+  "proxyAuthPass" : null,
+  "isDefault" : false,
+  "pacUrl" : null,
+  "configs" : [
+    {
+      "enable" : true,
+      "password" : "iu654321",
+      "method" : "aes-256-cfb",
+      "remarks" : "美国西部",
+      "server" : "54.67.96.173",
+      "kcptun" : {
+        "nocomp" : false,
+        "key" : "it's a secrect",
+        "crypt" : "aes",
+        "datashard" : 10,
+        "mtu" : 1350,
+        "mode" : "fast",
+        "parityshard" : 3,
+        "arguments" : ""
+      },
+      "enabled_kcptun" : false,
+      "server_port" : 9888,
+      "remarks_base64" : "576O5Zu96KW\/6YOo"
+    },
+    {
+      "enable" : true,
+      "password" : "iu654321",
+      "method" : "aes-256-cfb",
+      "remarks" : "首都在线",
+      "server" : "118.193.23.18",
+      "kcptun" : {
+        "nocomp" : false,
+        "key" : "it's a secrect",
+        "crypt" : "aes",
+        "datashard" : 10,
+        "mtu" : 1350,
+        "mode" : "fast",
+        "parityshard" : 3,
+        "arguments" : ""
+      },
+      "enabled_kcptun" : false,
+      "server_port" : 9888,
+      "remarks_base64" : "6aaW6YO95Zyo57q\/"
+    },
+    {
+      "enable" : true,
+      "password" : "iu654321",
+      "method" : "aes-256-cfb",
+      "remarks" : "东京",
+      "server" : "54.250.146.108",
+      "kcptun" : {
+        "nocomp" : false,
+        "key" : "it's a secrect",
+        "crypt" : "aes",
+        "datashard" : 10,
+        "mtu" : 1350,
+        "mode" : "fast",
+        "parityshard" : 3,
+        "arguments" : ""
+      },
+      "enabled_kcptun" : false,
+      "server_port" : 9888,
+      "remarks_base64" : "5Lic5Lqs"
+    },
+    {
+      "enable" : true,
+      "password" : "ODdjNTY5MG",
+      "method" : "aes-256-cfb",
+      "remarks" : "BWG-LA-CN2",
+      "server" : "172.96.213.155",
+      "kcptun" : {
+        "nocomp" : false,
+        "key" : "it's a secrect",
+        "crypt" : "aes",
+        "datashard" : 10,
+        "mtu" : 1350,
+        "mode" : "fast",
+        "parityshard" : 3,
+        "arguments" : ""
+      },
+      "enabled_kcptun" : false,
+      "server_port" : 11551,
+      "remarks_base64" : "QldHLUxBLUNOMg=="
+    }
+  ],
+  "proxyPort" : 0,
+  "randomAlgorithm" : 0,
+  "proxyEnable" : false,
+  "enabled" : true,
+  "autoban" : false,
+  "proxyAuthUser" : null,
+  "shareOverLan" : false,
+  "localPort" : 1080
+}
