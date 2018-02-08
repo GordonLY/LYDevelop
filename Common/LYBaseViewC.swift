@@ -9,15 +9,9 @@
 import UIKit
 import Kingfisher
 
-class LYBaseViewC: UIViewController, UIGestureRecognizerDelegate, LYRequestManagerDelegate {
+class LYBaseViewC: UIViewController, UIGestureRecognizerDelegate {
     
-    
-    lazy var netMng: LYRequestManager = {
-        let net = LYRequestManager()
-        net.delegate = self
-        return net
-    }()
-    lazy var animateView: UIActivityIndicatorView = {
+    private lazy var animateView: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView.init(activityIndicatorStyle: .gray)
         indicator.centerX = self.view.centerX
         indicator.top = kFitWid(200)
@@ -52,13 +46,5 @@ class LYBaseViewC: UIViewController, UIGestureRecognizerDelegate, LYRequestManag
     }
     func ly_stopAnimating() {
         animateView.stopAnimating()
-    }
-    
-    // MARK: - ********* Net Response delegate
-    func ly_netReponseSuccess(urlStr: String, result: Dictionary<String, Any>?) {
-    }
-    func ly_netReponseIncorrect(urlStr: String, code: Int, message: String?) {
-    }
-    func ly_netReponseFailed(urlStr: String, error: LYError?) {
     }
 }
