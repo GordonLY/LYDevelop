@@ -9,7 +9,6 @@
 import UIKit
 
 
-
 class LYCircleProgressView: UIView {
 
     var label: UICountingLabel!

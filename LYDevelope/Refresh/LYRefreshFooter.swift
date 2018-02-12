@@ -7,18 +7,19 @@
 //
 
 import UIKit
+import MJRefresh
 
 class LYRefreshFooter: MJRefreshBackFooter {
-
-    public func setTitle(_ title:String?, for state:MJRefreshState) -> Void {
-        if let title = title {
-            stateTitles[state] = title
-        }
-    }
     
     private var loading: UIActivityIndicatorView!
     private var stateLabel: UILabel!
     private var stateTitles = [MJRefreshState: String?]()
+    
+    public func setTitle(_ title:String?, for state: MJRefreshState) -> Void {
+        if let title = title {
+            stateTitles[state] = title
+        }
+    }
     
     override func prepare() {
         super.prepare()

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LYContentView: UIView {
+final class LYContentView: UIView {
     
     private var containerView: UIView!
     private var bgView:   UIView!

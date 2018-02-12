@@ -9,17 +9,17 @@
 import UIKit
 
 class LYSearchBar: UITextField {
-
+    
     var placeholderColor = kSeparateLineColor()
     var placeholderTxt = "" {
         didSet {
-            self.attributedPlaceholder = placeholderTxt.ly_AttributeStr(font: self.font ?? kRegularFitFont(size: 11), color: self.placeholderColor, wordSpacing: 0)
+            self.attributedPlaceholder = placeholderTxt.ly.attributeStr(font: self.font ?? kRegularFitFont(size: 11), color: self.placeholderColor, wordSpacing: 0)
         }
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-    
+        
         self.borderStyle = .none
         self.returnKeyType = .search
         self.autocorrectionType = .no
@@ -34,7 +34,7 @@ class LYSearchBar: UITextField {
         guard self.isFirstResponder else {
             return CGRect.zero
         }
-        guard let txt = self.text, txt.characters.count > 0 else {
+        guard let txt = self.text, txt.count > 0 else {
             return CGRect.zero
         }
         return CGRect.init(x: self.width - self.height, y: 0, width: self.height, height: self.height)
@@ -49,7 +49,7 @@ class LYSearchBar: UITextField {
             rightBtn.addTarget(self, action: #selector(p_actionClearBtn), for: .touchUpInside)
             rightBtn.imageView?.contentMode = .center
             rightBtn.setImage(UIImage.init(named: "jz_search_clear"), for: .normal)
-            rightBtn.setImage(UIImage.init(named: "jz_search_clear")?.lyImage(tintColor: UIColor.init(white: 1, alpha: 0.4)), for: .highlighted)
+            rightBtn.setImage(UIImage.init(named: "jz_search_clear")?.ly.tintColor(UIColor.init(white: 1, alpha: 0.4)), for: .highlighted)
             self.rightView = rightBtn
             self.rightViewMode = .whileEditing
             
@@ -59,6 +59,5 @@ class LYSearchBar: UITextField {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    
 }
+

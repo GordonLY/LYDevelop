@@ -7,26 +7,26 @@
 //
 
 import Foundation
+import Alamofire
 
-let kJZPageSize = 10
-let devConfigJZ: DevelopEnvironment = .online
+let kPageSize = 10
 
-public enum DevelopEnvironment {
-    /// 测试环境
-    case test
-    /// 线上环境
-    case online
-}
+///  netWork Config
+let kNetWorkDataCache = "NetWorkDataCache"
+let kCacheDataSaveTimeLong: TimeInterval = 60 * 60 * 6 // 半天
+let kCacheDataSaveTimeShort: TimeInterval = 60 * 30 // 半小时
 
 class LYNetProvider<Target: LYNetTargetType> {
     
-    weak var delegate : LYNetProviderResponseProtocol?
-    private var requestsArr: [URLSessionDataTask] = []
+    private var requestsArr = [DataRequest]()
     
     func cancelAllRequest() { requestsArr.forEach {$0.cancel()}}
     deinit { requestsArr.forEach {$0.cancel()} }
+}
 
-    func request(_ target: Target, param: [String: Any]? = nil, success:(([String: Any]?) -> Void)? = nil, incorrect:((String?) -> Void)? = nil, fail:((Error?) -> Void)? = nil) {
+extension LYNetProvider {
+    // MARK: === net request
+    func request(_ target: Target, param: [String: Any]? = nil, success:(([String: Any]?) -> Void)? = nil, incorrect:((String, String) -> Void)? = nil, fail:((Error?) -> Void)? = nil) {
         switch target.method {
         case .get:
             ly_getRequest(target: target, param: param, header: target.headers, success: success, incorrect: incorrect, fail: fail)
@@ -34,78 +34,52 @@ class LYNetProvider<Target: LYNetTargetType> {
             ly_postRequest(target: target, param: param, header: target.headers, success: success, incorrect: incorrect, fail: fail)
         }
     }
-    func loaclCache(_ target: Target, param: [String: Any] = [:]) -> [String: Any]? {
-        let urlStr = target.baseURL + target.path
-        return LYNetWork.ly_CacheDataFromeUrl(urlStr, dict: param) as? [String: Any]
-    }
+//    // MARK: === 查找本地缓存数据
+//    func ly_LoaclCache(urlStr: String, param: Dictionary<String, Any>?) -> Dictionary<String, Any>? {
+//        return LYNetWorkRequest.ly_loadCacheDataWith(urlStr: urlStr, dict: param)
+//    }
+//    // MARK: === 上传文件
+//    func ly_Upload(imgData:Data, urlStr: String) {
+//        LYNetWorkRequest.ly_uploadPhoto(imgData: imgData, urlStr: urlStr, success: { [weak self](response) in
+//            self?.p_callDelegate(success: urlStr, data: response)
+//        }) { [weak self](error) in
+//            self?.p_callDelegate(fail: urlStr, error: error)
+//        }
+//    }
+//    // MARK: === 下载文件
+//    func ly_down(filePath path: String, progress: ((Progress, String) -> Void)?, success: ((URL?) -> Void)?) -> Void {
+//        _ = LYNetWorkRequest.ly_downloadFile(atPath: path, downProgress: progress, success: success)
+//    }
 }
 
 extension LYNetProvider {
-    fileprivate func ly_getRequest(target:Target, param: [String: Any]?, header:[String: String], success:(([String: Any]?) -> Void)?, incorrect:((String?) -> Void)?, fail:((Error?) -> Void)?) {
-        let needCache = target.needCache
-        let urlStr = target.baseURL + target.path
-        requestsArr.append(LYNetWork.ly_get(withUrl: urlStr, dict: param, needCache: needCache, header: header, success: { [weak self](responseObj) in
-            guard let `self` = self else { return }
-            LYToastView.hideLoading()
-            if let result = responseObj as? [String: Any] {
-                // success
-                if let code = result["code"] as? Int, code == 0 {
-                    self.delegate?.ly_netReponseSuccess(target: target, result: result)
-                    success?(result)
-                } else {
-                    if let msg = result["msg"] as? String {
-                        let resCode = (result["code"] as? Int) ?? 99999
-                        self.delegate?.ly_netReponseIncorrect(code: resCode, target: target, message: msg)
-                        incorrect?(msg)
-                    }
-                }
-            }
+    fileprivate func ly_getRequest(target:Target, param: [String: Any]?, header:[String: String], success:(([String: Any]?) -> Void)?, incorrect:((String, String) -> Void)?, fail:((Error?) -> Void)?) {
+        requestsArr.append(LYNetWorkRequest.ly_getRequest(urlStr: target.urlStr, dict: param, isCache: target.needCache, success: { (responseObj) in
+            //  LYToastView.hideLoading()
+            success?(responseObj)
+        }, notSuccess: { (code, msg) in
+            //  LYToastView.hideLoading()
+            incorrect?(code, msg)
         }) { (error) in
-            LYToastView.hideLoading()
-            self.delegate?.ly_netReponseFailed(target: target)
+            //  LYToastView.hideLoading()
             fail?(error)
         })
     }
-    ///  post request
-    fileprivate func ly_postRequest(target:Target, param: [String: Any]?, header:[String: String], success:(([String: Any]?) -> Void)?, incorrect:((String?) -> Void)?, fail:((Error?) -> Void)?) {
-        let urlStr = target.baseURL + target.path
-        requestsArr.append(LYNetWork.ly_post(withUrl: urlStr, dict: param, header: header, success: { [weak self](responseObj) in
-            guard let `self` = self else { return }
-            LYToastView.hideLoading()
-            if let result = responseObj as? [String: Any] {
-                // success
-                if let code = result["code"] as? Int, code == 0 {
-                    self.delegate?.ly_netReponseSuccess(target: target, result: result)
-                    success?(result)
-                } else {
-                    if let msg = result["msg"] as? String {
-                        let resCode = (result["code"] as? Int) ?? 99999
-                        self.delegate?.ly_netReponseIncorrect(code: resCode, target: target, message: msg)
-                        incorrect?(msg)
-                    }
-                }
-            }
-        }) { (error) in
-            LYToastView.hideLoading()
-            self.delegate?.ly_netReponseFailed(target: target)
-            fail?(error)
-        })
-    }
-}
-
-
-
-protocol LYNetProviderResponseProtocol: NSObjectProtocol {
     
-    typealias Target = LYNetTargetType
-    ///  请求成功
-    func ly_netReponseSuccess(target: Target, result: [String: Any]?)
-    ///  请求错误
-    func ly_netReponseIncorrect(code: Int, target: Target, message: String?)
-    ///  请求失败
-    func ly_netReponseFailed(target: Target)
+    ///  post request
+    fileprivate func ly_postRequest(target:Target, param: [String: Any]?, header:[String: String], success:(([String: Any]?) -> Void)?, incorrect:((String, String) -> Void)?, fail:((Error?) -> Void)?) {
+        requestsArr.append(LYNetWorkRequest.ly_postRequest(urlStr: target.urlStr, dict: param, isCache: target.needCache, success: { (responseObj) in
+            //  LYToastView.hideLoading()
+            success?(responseObj)
+        }, notSuccess: { (code, msg) in
+            //  LYToastView.hideLoading()
+            incorrect?(code, msg)
+        }) { (error) in
+            //  LYToastView.hideLoading()
+            fail?(error)
+        })
+    }
 }
-
 
 public protocol LYNetTargetType {
     
@@ -115,8 +89,11 @@ public protocol LYNetTargetType {
     /// The path to be appended to `baseURL` to form the full `URL`.
     var path: String { get }
     
+    /// baseURL + path
+    var urlStr: String { get }
+    
     /// The HTTP method used in the request.
-    var method: HTTPMethod { get }
+    var method: LYHTTPMethod { get }
     
     /// Cache dict to disk
     var needCache: Bool { get }
@@ -125,7 +102,7 @@ public protocol LYNetTargetType {
     var headers: [String: String] { get }
 }
 
-public enum HTTPMethod {
+public enum LYHTTPMethod {
     case get
     case post
 }

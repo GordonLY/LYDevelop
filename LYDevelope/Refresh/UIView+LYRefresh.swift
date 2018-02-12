@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MJRefresh
 
 extension LYDevelop where Base: UITableView {
     
@@ -22,12 +23,17 @@ extension LYDevelop where Base: UITableView {
         p_setRefreshFooter(footer!)
         base.mj_footer = footer
     }
+    /// set footer title
+    func setTitle(_ title:String?, for state: MJRefreshState) -> Void {
+        guard let footer = base.mj_footer as? LYRefreshFooter else { return }
+        footer.setTitle(title, for: state)
+    }
     // MARK: - ********* Private Method
     private func p_setRefreshHeader(_ header:LYRefreshHeader) {
         header.isAutomaticallyChangeAlpha = true
     }
     private func p_setRefreshFooter(_ footer:LYRefreshFooter) {
-        footer.setTitle("", for:.noMoreData)
+        
     }
 }
 
@@ -45,12 +51,17 @@ extension LYDevelop where Base: UICollectionView {
         p_setRefreshFooter(footer!)
         base.mj_footer = footer
     }
+    /// set footer title
+    func setTitle(_ title:String?, for state: MJRefreshState) -> Void {
+        guard let footer = base.mj_footer as? LYRefreshFooter else { return }
+        footer.setTitle(title, for: state)
+    }
     // MARK: - ********* Private Method
     private func p_setRefreshHeader(_ header:LYRefreshHeader) {
         header.isAutomaticallyChangeAlpha = true
     }
     private func p_setRefreshFooter(_ footer:LYRefreshFooter) {
-        footer.setTitle("", for:.noMoreData)
+        
     }
 }
 

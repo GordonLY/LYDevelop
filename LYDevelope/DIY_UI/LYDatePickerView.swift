@@ -107,7 +107,7 @@ class LYDatePickerView: UIView, UIPickerViewDelegate, UIPickerViewDataSource {
     }
     func ly_setSelectedDateStr(_ str: String?) {
         
-        if let dateStr = str, dateStr.characters.count == 10 {
+        if let dateStr = str, dateStr.count == 10 {
             selDateStr = dateStr
             let arr = selDateStr.components(separatedBy: "-")
             if arr.count == 3,
